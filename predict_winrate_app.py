@@ -4,12 +4,13 @@ import numpy as np
 import os
 import plotly.express as px
 import plotly.graph_objs as go
+import io
 
 DEFAULT_WR_MATRIX = pd.DataFrame({
     "Overall": [50,49,51,40],
     "Aggro": [50,60,40,40],
-    "Midrange": [60, 50, 40,40],
-    "Control": [40,60,50,40],
+    "Midrange": [40, 50,60,40],
+    "Control": [60,40,50,40],
 },
     index = ["Aggro", "Midrange", "Control", "Tier 4 deck"],
 )
@@ -43,6 +44,22 @@ Overall column is required for each deck""")
     if wr_matrix is not None:
             
         st.write(wr_matrix)
+        
+        if use_default_matrix:
+            
+            buffer = io.BytesIO()
+            
+            with pd.ExcelWriter(buffer, engine='xlsxwriter') as writer:
+                wr_matrix.to_excel(writer, sheet_name='Sheet1')
+                writer.close()
+
+                st.download_button(
+                    label="Download example wr matrix file",
+                    data=buffer,
+                    file_name="example_wr_matrix.xlsx",
+                    mime="application/vnd.ms-excel",
+                    type="primary",
+                )
 
         meta_decks = list(wr_matrix.columns)[1:]
         meta_predictions = {}
