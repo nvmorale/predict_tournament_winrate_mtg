@@ -68,7 +68,13 @@ Overall column is required for each deck""")
             st.write("Fill your metagame prediction (0 to 100)")
             for deck in meta_decks:
                 label = deck
-                meta_predictions[label] = st.number_input(label, min_value=0.0, max_value=100.0, step = 0.1)
+                meta_predictions[label] = st.number_input(
+                    label,
+                    min_value=0.0, 
+                    max_value=100.0, 
+                    step = 0.1,
+                    format = "%0.1f",
+                )
 
             others_meta = 100 - np.sum(list(meta_predictions.values()))
             st.write(f"Other decks: {others_meta}%")
